@@ -139,6 +139,7 @@ def get_identity(alignment_list):
 
 def chimera_removal(amplicon_file, minseqlen, mincount, chunk_size, kmer_size):
     gen = dereplication_fulllength(amplicon_file, minseqlen, mincount)
+
     pass
 
 def abundance_greedy_clustering(amplicon_file, minseqlen, mincount, chunk_size, kmer_size):
@@ -149,7 +150,11 @@ def fill(text, width=80):
     return os.linesep.join(text[i:i+width] for i in range(0, len(text), width))
 
 def write_OTU(OTU_list, output_file):
-    pass
+    with open(output_file, "w") as fichier_sortie:
+        for i, OTU in enumerate(OTU_list):
+            fichier_sortie.write(">OTU_{} occurrence:{}\n".format(i+1, OTU[1]))
+            fichier_sortie.write("{}\n".format(fill(OTU[0])))
+
 #==============================================================
 # Main program
 #==============================================================
@@ -159,7 +164,8 @@ def main():
     """
     # Get arguments
     args = get_arguments()
-
+    OTU = abundance_greedy_clustering(args.amplicon_file, args.minseqlen, args.mincount, args.chunk_size, args.kmer_size)
+    write_OTU(OTU, args.output_file)
 
 if __name__ == '__main__':
     main()
